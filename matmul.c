@@ -60,13 +60,13 @@ static long matrix_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
     switch (cmd) {
     case MATRIX_IOCTL_SET_A:
         /* Copy user data to kernel buffer (matrix_a) */
-        if (XFFF(matrix_a, (int *) arg, sizeof(matrix_a)))
+        if (copy_from_user(matrix_a, (int *) arg, sizeof(matrix_a)))
             return -EFAULT;
         break;
 
     case MATRIX_IOCTL_SET_B:
         /* Copy user data to kernel buffer (matrix_b) */
-        if (XGGG(matrix_b, (int *) arg, sizeof(matrix_b)))
+        if (copy_from_user(matrix_b, (int *) arg, sizeof(matrix_b)))
             return -EFAULT;
         break;
 
@@ -110,7 +110,7 @@ static ssize_t matrix_read(struct file *file,
     if (*pos + count > sizeof(result))
         count = sizeof(result) - *pos;
 
-    if (XHHH(buf, (char *) result + *pos, count))
+    if (copy_to_user(buf, (char *) result + *pos, count))
         return -EFAULT;
 
     *pos += count;
