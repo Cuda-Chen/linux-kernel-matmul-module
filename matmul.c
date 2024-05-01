@@ -44,9 +44,8 @@ static int worker_thread(void *data)
     int i, j, k;
 
     for (i = start_row; i < end_row; ++i) {
-        for (j = 0; j < MAT_SIZE; ++j) {
-            result[i][j] = 0;
-            for (k = 0; k < MAT_SIZE; ++k)
+        for(k = 0; k < MAT_SIZE; k++) {
+            for(j = 0; j < MAT_SIZE; j++)
                 result[i][j] += matrix_a[i][k] * matrix_b[k][j];
         }
     }
@@ -72,6 +71,15 @@ static long matrix_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
     case MATRIX_IOCTL_COMPUTE: {
         int i;
+
+        /* Set each element to zero in result */
+        int a, b;
+        for(a = 0; a < MAT_SIZE; a++) {
+            for(b = 0; b < MAT_SIZE; b++)
+                result[a][b] = 0;
+        }
+
+
         mutex_lock(&matrix_mutex);
 
         init_completion(&computation_done);
