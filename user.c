@@ -21,6 +21,16 @@ void fill_matrix(int matrix[MAT_SIZE][MAT_SIZE], int n)
     }
 }
 
+void fill_matrix_random(int matrix[MAT_SIZE][MAT_SIZE], int n)
+{
+    srand(0);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            matrix[i][j] = rand();
+        }
+    }
+}
+
 int main()
 {
     int fd = open("/proc/matmul", O_RDWR);
@@ -42,11 +52,13 @@ int main()
     int matrix_a[MAT_SIZE][MAT_SIZE];
     int matrix_b[MAT_SIZE][MAT_SIZE];
 
-    printf("Matrix A:\n");
+    /*printf("Matrix A:\n");
     fill_matrix(matrix_a, n);
 
     printf("Matrix B:\n");
-    fill_matrix(matrix_b, n);
+    fill_matrix(matrix_b, n);*/
+    fill_matrix_random(matrix_a, n);
+    fill_matrix_random(matrix_b, n);
 
     /* Set matrix A/B */
     if (ioctl(fd, MATRIX_IOCTL_SET_A, matrix_a) ||
@@ -78,6 +90,22 @@ int main()
         for (int j = 0; j < n; ++j)
             printf("%d ", result[i][j]);
         printf("\n");
+    }
+
+    int ref[MAT_SIZE][MAT_SIZE];
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            ref[i][j] = 0;
+            for(int k = 0; k < n; k++) {
+                ref[i][j] += matrix_a[i][k] * matrix_b[k][j];
+            }
+        }
+    }
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(result[i][j] != ref[i][j])
+                printf("(%d,%d)inconsistent: %d %d\n", i, j, result[i][j], ref[i][j]);
+        }
     }
 
     close(fd);
