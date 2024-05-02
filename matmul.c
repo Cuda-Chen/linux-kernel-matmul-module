@@ -37,9 +37,18 @@ static int result[MAT_SIZE][MAT_SIZE];
 static struct mutex matrix_mutex;
 static struct completion computation_done; /* for synchronization */
 
+typedef struct start_dim {
+    int x;
+    int y;
+    int z;
+} dim;
+
 static int worker_thread(void *data)
 {
-    int start_row = *(int *) data;
+    /*int start_row = *(int *) data;
+    int end_row = start_row + SUBMAT_SIZE;*/
+    dim d = *(dim *)data;
+    int start_row = d.x;
     int end_row = start_row + SUBMAT_SIZE;
     int i, j, k;
 
@@ -86,8 +95,12 @@ static long matrix_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
         /* Create worker threads for each submatrix */
         for (i = 0; i < MAT_SIZE; i += SUBMAT_SIZE) {
-            int *thread_arg = kmalloc(sizeof(int), GFP_KERNEL);
-            *thread_arg = i;
+            /*int *thread_arg = kmalloc(sizeof(int), GFP_KERNEL);
+            *thread_arg = i;*/
+            dim *thread_arg = kmalloc(sizeof(struct start_dim), GFP_KERNEL);
+            thread_arg->x = i;
+            thread_arg->y = 0;
+            thread_arg->z = 0;
             kthread_run(worker_thread, thread_arg, "worker_thread");
         }
 

@@ -85,13 +85,14 @@ int main()
     }
 
     /* Display the result matrix */
-    printf("Result matrix:\n");
+    /*printf("Result matrix:\n");
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j)
             printf("%d ", result[i][j]);
         printf("\n");
-    }
+    }*/
 
+    /* Test whether the result matrix is as same as ref matrix */
     int ref[MAT_SIZE][MAT_SIZE];
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
