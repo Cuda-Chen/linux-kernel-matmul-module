@@ -39,7 +39,7 @@ int main()
         return -1;
     }
 
-    int n;  /* size of the matrix */
+    int n; /* size of the matrix */
     printf("Enter matrix size (n): ");
     scanf("%d", &n);
 
@@ -94,18 +94,19 @@ int main()
 
     /* Test whether the result matrix is as same as ref matrix */
     int ref[MAT_SIZE][MAT_SIZE];
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             ref[i][j] = 0;
-            for(int k = 0; k < n; k++) {
+            for (int k = 0; k < n; k++) {
                 ref[i][j] += matrix_a[i][k] * matrix_b[k][j];
             }
         }
     }
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            if(result[i][j] != ref[i][j])
-                printf("(%d,%d)inconsistent: %d %d\n", i, j, result[i][j], ref[i][j]);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (result[i][j] != ref[i][j])
+                printf("(%d,%d)inconsistent: %d %d\n", i, j, result[i][j],
+                       ref[i][j]);
         }
     }
 
