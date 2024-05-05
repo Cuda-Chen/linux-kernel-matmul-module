@@ -55,8 +55,8 @@ static int worker_thread(void *data)
     int i, j, k;
 
     for (i = start_i; i < end_i; ++i) {
-        for (k = start_k; k < MAT_SIZE; k++) {
-            for (j = start_j; j < MAT_SIZE; j++)
+        for (k = start_k; k < end_k; k++) {
+            for (j = start_j; j < end_j; j++)
                 result[i][j] += matrix_a[i][k] * matrix_b[k][j];
         }
     }
@@ -97,8 +97,8 @@ static long matrix_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
         /* Create worker threads for each submatrix */
         for (i = 0; i < MAT_SIZE; i += SUBMAT_SIZE) {
-            for (j = 0; j < 1; j += SUBMAT_SIZE) {
-                for (k = 0; k < 1; k += SUBMAT_SIZE) {
+            for (j = 0; j < MAT_SIZE; j += SUBMAT_SIZE) {
+                for (k = 0; k < MAT_SIZE; k += SUBMAT_SIZE) {
                     dim *thread_arg =
                         kmalloc(sizeof(struct start_dim), GFP_KERNEL);
                     thread_arg->x = i;
